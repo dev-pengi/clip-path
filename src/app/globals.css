@@ -67,14 +67,10 @@ main {
 
 .shadowboard {
   background-image: url("https://bennettfeely.com/clippy/pics/pittsburgh.jpg");
+  background-size: contain;
 }
 
 .clipped-image {
   background-image: url("https://bennettfeely.com/clippy/pics/pittsburgh.jpg");
-}
-
-.is-dragging {
-  cursor: move;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
+  background-size: contain;
 }

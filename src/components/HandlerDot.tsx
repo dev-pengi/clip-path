@@ -1,85 +1,65 @@
 "use client";
-import React, { DragEvent, useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface HandlerDotProps {
   x: number;
   y: number;
   onDrag: (newPosition: { x: number; y: number }) => void;
-  IsDragging: boolean;
-  setIsDragging: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const HandlerDot: React.FC<HandlerDotProps> = ({
-  x,
-  y,
-  onDrag,
-  IsDragging,
-  setIsDragging,
-}) => {
-  const [dragging, setDragging] = useState(false);
-  const handleDragStart = (event: DragEvent<HTMLDivElement>) => {
-    event.dataTransfer!.setDragImage(new Image(), 0, 0);
+const HandlerDot: React.FC<HandlerDotProps> = ({ x, y, onDrag }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const dotRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseDown = () => {
     setIsDragging(true);
-    setDragging(true);
-    event.dataTransfer!.effectAllowed = "all";
   };
-  useEffect(() => {
-    document.addEventListener("dragover", (event) => {
-      event.preventDefault();
-    });
-  }, []);
 
-  const handleDragEnd = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const handleMouseMove = (event: MouseEvent) => {
+    if (isDragging && dotRef.current) {
+      const parentRect = (
+        dotRef.current.parentNode as Element
+      )?.getBoundingClientRect();
+      if (!parentRect) return;
 
+      const newX = clamp(event.clientX - parentRect.left, 0, parentRect.width);
+      const newY = clamp(event.clientY - parentRect.top, 0, parentRect.height);
+
+      onDrag({ x: newX, y: newY });
+    }
+  };
+
+  const handleMouseUp = () => {
     setIsDragging(false);
-    setDragging(false);
-
-    const parentRect = (
-      event.currentTarget.parentNode as Element
-    )?.getBoundingClientRect();
-    if (!parentRect) return;
-
-    const newX = clamp(event.clientX - parentRect.left, 0, parentRect.width);
-    const newY = clamp(event.clientY - parentRect.top, 0, parentRect.height);
-
-    onDrag({ x: newX, y: newY });
   };
-  const handleDrag = (event: DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
 
-    const parentRect = (
-      event.currentTarget.parentNode as Element
-    )?.getBoundingClientRect();
-    if (!parentRect) return;
+  useEffect(() => {
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("mouseup", handleMouseUp);
+    } else {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    }
 
-    const newX = clamp(event.clientX - parentRect.left, 0, parentRect.width);
-    const newY = clamp(event.clientY - parentRect.top, 0, parentRect.height);
-
-    onDrag({ x: newX, y: newY });
-  };
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isDragging]);
 
   return (
     <div
-      className={`handler-dot ${
-        dragging
+      ref={dotRef}
+      className={`handler-dot z-[100] ${
+        isDragging
           ? "bg-transparent border-[2px] border-primary border-solid cursor-none"
-          : "bg-primary"
-      } opacity-70 rounded-full w-4 h-4 absolute transform -translate-x-2 -translate-y-2 cursor-grabbing`}
+          : "bg-primary cursor-grab"
+      } opacity-70 rounded-full w-5 h-5 absolute transform -translate-x-2 -translate-y-2`}
       style={{ left: `${x}px`, top: `${y}px` }}
-      // draggable
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
-      onDrag={handleDrag}
-      onDragOver={(e) => {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = "move";
-      }}
-      onDragEnter={(e) => {
-        e.preventDefault();
-      }}
+      onMouseDown={handleMouseDown}
+      draggable={true}
+      onDragStart={(e) => e.preventDefault()}
     />
   );
 };
