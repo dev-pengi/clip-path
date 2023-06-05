@@ -17,8 +17,8 @@ export default {
         xlg: "1300px",
       },
       colors: {
-        primary: "#1FFBE8",
-        secondary: "#34FF80",
+        primary: "#ff5400",
+        secondary: "#ff0000",
         dark: "#1a1a1a",
       },
     },
