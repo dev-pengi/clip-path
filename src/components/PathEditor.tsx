@@ -15,11 +15,10 @@ const PolygonEditor: FC = () => {
   const [width, setWidth] = useState(300);
 
   const [points, setPoints] = useState<Point[]>([
-    { x: 0, y: height },
     { x: width, y: height },
     { x: width, y: 0 },
     { x: 0, y: 0 },
-    { x: 0, y: 0 },
+    { x: 0, y: height },
   ]);
   const [clipPath, setClipPath] = useState<string>("");
 
