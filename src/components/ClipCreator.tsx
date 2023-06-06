@@ -22,8 +22,8 @@ const ClipCreator: FC = () => {
         </div>
         <Controller />
       </div>
-      <div className="px-3 w-max mx-auto mt-12">
-        <div className="px-6 py-4 w-max max-w-[800px]">
+      <div className="w-max md:max-w-[750px] max-w-[98vw] mx-auto mt-12">
+        <div className="px-6 py-4">
           <SyntaxHighlighter
             language="css"
             style={oneDark}

@@ -19,7 +19,7 @@ const Controller: FC = ({}) => {
               <div
                 key={index}
                 className={`${
-                  shape == index ? "bg-primary" : "bg-gray-100"
+                  shape == index ? "bg-primary" : "bg-white"
                 } cursor-pointer shadow-light hover:shadow-strong hover:-translate-y-1 duration-300 h-[100px] rounded-lg flex flex-col items-center justify-center gap-1`}
                 onClick={() => setShape(index)}
               >
