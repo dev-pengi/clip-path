@@ -78,9 +78,7 @@ const HandlerDot: React.FC<HandlerDotProps> = ({ x, y, onDrag }) => {
       className={`handler-dot z-[100] ${
         isDragging
           ? "bg-transparent border-[2px] border-primary border-solid cursor-none"
-          : `bg-primary ${
-              isCustomizing ? "cursor-not-allowed" : "cursor-grabbing"
-            }`
+          : `bg-primary ${isCustomizing ? "" : "cursor-grab"}`
       } opacity-70 rounded-full w-5 h-5 absolute transform -translate-x-2 -translate-y-2`}
       style={{ left: `${x}px`, top: `${y}px` }}
       onMouseDown={handleDragStart}

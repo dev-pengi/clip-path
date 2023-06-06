@@ -48,9 +48,9 @@ const Controller: FC = ({}) => {
   };
 
   useEffect(() => {
-    if (isCustomizing && points.length >= 18) {
+    if (isCustomizing && points.length >= 25) {
       setIsCustomizing(false);
-      toast.error("Maximum 18 points allowed");
+      toast.error("Maximum 25 points allowed");
     }
   }, [points]);
 
@@ -95,7 +95,7 @@ const Controller: FC = ({}) => {
               className={`${optionbuttonStyle} bg-primary text-white`}
             >
               <Image src={reset} alt="reset" />
-              <p>Reset shape</p>
+              <p>Reset</p>
             </button>
           ) : (
             <button onClick={handleCopy} className={`${optionbuttonStyle}`}>
