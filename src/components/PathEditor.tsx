@@ -13,12 +13,22 @@ interface Point {
 
 const PolygonEditor: FC = () => {
   const containerRef = useRef(null);
+  const [clickPosition, setClickPosition] = useState<Point | null>(null);
 
-  const { shape, width, height, points, cssCode, setPoints, setCssCode } =
-    useShapeContext();
+  const {
+    shape,
+    width,
+    height,
+    points,
+    cssCode,
+    setPoints,
+    setCssCode,
+    isCustomizing,
+  } = useShapeContext();
 
   useEffect(() => {
-    const newPoints = shapes[shape].points.map((point) => {
+    if (shape == 0) return;
+    const newPoints = shapes[shape - 1].points.map((point) => {
       return { x: (point.x * width) / 100, y: (point.y * height) / 100 };
     });
     setPoints(newPoints);
@@ -26,7 +36,7 @@ const PolygonEditor: FC = () => {
 
   useEffect(() => {
     setCssCode(
-      `${shapes[shape].clip}(${points
+      `polygon(${points
         .map(
           (point) =>
             `${Math.floor((point.x / width) * 100)}% ${Math.floor(
@@ -43,9 +53,37 @@ const PolygonEditor: FC = () => {
     setPoints(updatedPoints);
   };
 
+  const handleContainerClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    if (!isCustomizing) return;
+    const container = containerRef.current;
+    if (container) {
+      const containerRect = (container as Element).getBoundingClientRect();
+      const offsetX = event.clientX - containerRect.left;
+      const offsetY = event.clientY - containerRect.top;
+      const newPosition: Point = {
+        x: offsetX,
+        y: offsetY,
+      };
+      setClickPosition(newPosition);
+    }
+  };
+
+  useEffect(() => {
+    if (clickPosition) {
+      const updatedPoints = [...points, clickPosition];
+      setPoints(updatedPoints);
+      setClickPosition(null);
+    }
+  }, [clickPosition]);
+
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className={`relative w-[300px] h-[300px]`}>
+      <div
+        className={`relative w-[300px] h-[300px] ${
+          isCustomizing ? "cursor-crosshair" : "cursor-auto"
+        }`}
+        onClick={handleContainerClick}
+      >
         <div className="shadowboard opacity-25 absolute bg-city w-full h-full" />
         <div
           className={`clipped-image bg-city w-full h-full overflow-visible`}

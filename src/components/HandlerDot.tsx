@@ -1,4 +1,5 @@
 "use client";
+import { useShapeContext } from "@/contexts/ShapeContext";
 import React, { useState, useEffect, useRef } from "react";
 
 interface HandlerDotProps {
@@ -9,13 +10,18 @@ interface HandlerDotProps {
 
 const HandlerDot: React.FC<HandlerDotProps> = ({ x, y, onDrag }) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [isTouchDrag, setIsTouchDrag] = useState(false);
+  const { isCustomizing } = useShapeContext();
   const dotRef = useRef<HTMLDivElement>(null);
 
   const handleDragStart = (
     event: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>
   ) => {
-    event.preventDefault();
-    setIsDragging(true);
+    if (!isCustomizing) {
+      event.preventDefault();
+      setIsDragging(true);
+      setIsTouchDrag("touches" in event);
+    }
   };
 
   const handleDragMove = (event: any) => {
@@ -52,16 +58,19 @@ const HandlerDot: React.FC<HandlerDotProps> = ({ x, y, onDrag }) => {
       window.removeEventListener("touchmove", handleDragMove);
       window.removeEventListener("mouseup", handleDragEnd);
       window.removeEventListener("touchend", handleDragEnd);
+      setIsTouchDrag(false);
     }
-    document.body.style.overflowY = isDragging ? "hidden" : "auto";
     return () => {
       window.removeEventListener("mousemove", handleDragMove);
       window.removeEventListener("touchmove", handleDragMove);
       window.removeEventListener("mouseup", handleDragEnd);
       window.removeEventListener("touchend", handleDragEnd);
-      document.body.style.overflowY = "auto";
     };
   }, [isDragging]);
+
+  useEffect(() => {
+    document.body.style.overflowY = isTouchDrag ? "hidden" : "auto";
+  }, [isTouchDrag]);
 
   return (
     <div
@@ -69,7 +78,9 @@ const HandlerDot: React.FC<HandlerDotProps> = ({ x, y, onDrag }) => {
       className={`handler-dot z-[100] ${
         isDragging
           ? "bg-transparent border-[2px] border-primary border-solid cursor-none"
-          : "bg-primary cursor-grab"
+          : `bg-primary ${
+              isCustomizing ? "cursor-not-allowed" : "cursor-grabbing"
+            }`
       } opacity-70 rounded-full w-5 h-5 absolute transform -translate-x-2 -translate-y-2`}
       style={{ left: `${x}px`, top: `${y}px` }}
       onMouseDown={handleDragStart}

@@ -15,7 +15,7 @@ const ClipCreator: FC = () => {
         create and customize your css clip path
       </h1>
       <div
-        className={`${contentPadding} w-full max-w-[1100px] mx-auto mt-16 flex md:flex-row flex-col-reverse md:gap-1 gap-7 items-center justify-between`}
+        className={`${contentPadding} w-full max-w-[1100px] mx-auto mt-12 flex md:flex-row flex-col-reverse md:gap-1 gap-7 items-center justify-between`}
       >
         <div className="h-max w-max">
           <Editor />

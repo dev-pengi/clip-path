@@ -16,24 +16,28 @@ interface ShapeContextValue {
   height: number;
   points: Point[];
   cssCode: string;
+  isCustomizing: boolean;
   setShape: Dispatch<SetStateAction<number>>;
   setWidth: Dispatch<SetStateAction<number>>;
   setHeight: Dispatch<SetStateAction<number>>;
   setPoints: Dispatch<SetStateAction<Point[]>>;
   setCssCode: Dispatch<SetStateAction<string>>;
+  setIsCustomizing: Dispatch<SetStateAction<boolean>>;
 }
 
 const ShapeContext = createContext<ShapeContextValue>({
-  shape: 0,
+  shape: 1,
   width: 0,
   height: 0,
   points: [{ x: 0, y: 0 }],
   cssCode: "clip-path: ;",
+  isCustomizing: false,
   setShape: () => {},
   setWidth: () => {},
   setHeight: () => {},
   setPoints: () => {},
   setCssCode: () => {},
+  setIsCustomizing: () => {},
 });
 
 export const useShapeContext = () => useContext(ShapeContext);
@@ -41,11 +45,12 @@ interface ShapeProviderProps {
   children: ReactNode;
 }
 const ShapeProvider: FC<ShapeProviderProps> = ({ children }) => {
-  const [shape, setShape] = useState<number>(0);
+  const [shape, setShape] = useState<number>(1);
   const [width, setWidth] = useState<number>(300);
   const [points, setPoints] = useState<Point[]>([{ x: 0, y: 0 }]);
   const [height, setHeight] = useState<number>(300);
   const [cssCode, setCssCode] = useState<string>(" ");
+  const [isCustomizing, setIsCustomizing] = useState<boolean>(false);
 
   const value: ShapeContextValue = {
     shape,
@@ -53,11 +58,13 @@ const ShapeProvider: FC<ShapeProviderProps> = ({ children }) => {
     height,
     points,
     cssCode,
+    isCustomizing,
     setShape,
     setWidth,
     setHeight,
     setPoints,
     setCssCode,
+    setIsCustomizing,
   };
 
   return (
