@@ -3,6 +3,8 @@ import { FC, useEffect, useRef, useState } from "react";
 import HandlerDot from "./HandlerDot";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { useShapeContext } from "@/contexts/ShapeContext";
+import { shapes } from "@/constants";
 
 interface Point {
   x: number;
@@ -11,20 +13,20 @@ interface Point {
 
 const PolygonEditor: FC = () => {
   const containerRef = useRef(null);
-  const [height, setHeight] = useState(300);
-  const [width, setWidth] = useState(300);
 
-  const [points, setPoints] = useState<Point[]>([
-    { x: width, y: height },
-    { x: width, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: height },
-  ]);
-  const [clipPath, setClipPath] = useState<string>("");
+  const { shape, width, height, points, cssCode, setPoints, setCssCode } =
+    useShapeContext();
 
   useEffect(() => {
-    setClipPath(
-      `polygon(${points
+    const newPoints = shapes[shape].points.map((point) => {
+      return { x: (point.x * width) / 100, y: (point.y * height) / 100 };
+    });
+    setPoints(newPoints);
+  }, [shape]);
+
+  useEffect(() => {
+    setCssCode(
+      `${shapes[shape].clip}(${points
         .map(
           (point) =>
             `${Math.floor((point.x / width) * 100)}% ${Math.floor(
@@ -47,7 +49,7 @@ const PolygonEditor: FC = () => {
         <div className="shadowboard opacity-25 absolute bg-city w-full h-full" />
         <div
           className={`clipped-image bg-city w-full h-full overflow-visible`}
-          style={{ clipPath: clipPath }}
+          style={{ clipPath: cssCode }}
           ref={containerRef}
         />
         {points.map((point, index) => (

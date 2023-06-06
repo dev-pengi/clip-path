@@ -1,10 +1,14 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
 import { FC } from "react";
 import Editor from "./PathEditor";
 import { contentPadding } from "@/styles";
+import Controller from "./Controller";
+import { useShapeContext } from "@/contexts/ShapeContext";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 const ClipCreator: FC = () => {
+  const { cssCode } = useShapeContext();
   return (
     <section>
       <h1 className="capitalize text-center text-3xl font-black">
@@ -15,6 +19,19 @@ const ClipCreator: FC = () => {
       >
         <div className="h-max w-max">
           <Editor />
+        </div>
+        <Controller />
+      </div>
+      <div className="px-3 w-max mx-auto mt-12">
+        <div className="px-6 py-4 w-max max-w-[800px]">
+          <SyntaxHighlighter
+            language="css"
+            style={oneDark}
+            customStyle={{ wordBreak: "break-word", borderRadius: "7px" }}
+            wrapLongLines
+          >
+            {`clip-path: ${cssCode};`}
+          </SyntaxHighlighter>
         </div>
       </div>
     </section>
