@@ -35,6 +35,7 @@ const PolygonEditor: FC = () => {
   }, [shape]);
 
   useEffect(() => {
+    if (!cssCode) setCssCode("clip-path: ;");
     setCssCode(
       `polygon(${points
         .map(

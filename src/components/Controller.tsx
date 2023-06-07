@@ -24,7 +24,7 @@ const Controller: FC = ({}) => {
   } = useShapeContext();
   const handleCopy = () => {
     navigator.clipboard
-      .writeText(cssCode)
+      .writeText(`clip-path: ${cssCode};`)
       .then(() => {
         toast.success("Copied to clipboard");
       })
