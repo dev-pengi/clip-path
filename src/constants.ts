@@ -266,6 +266,17 @@ const shapes: Shape[] = [
     ],
   },
   {
+    name: "diamond",
+    clip: "polygon",
+    points: [
+      { x: 75, y: 0 },
+      { x: 25, y: 0 },
+      { x: 0, y: 30 },
+      { x: 50, y: 100 },
+      { x: 100, y: 30 },
+    ],
+  },
+  {
     name: "close",
     clip: "polygon",
     points: [
