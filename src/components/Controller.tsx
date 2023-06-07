@@ -37,7 +37,7 @@ const Controller: FC = ({}) => {
       if (points.length < 3) return toast.error("Minimum 3 points required");
       setIsCustomizing(false);
     } else {
-      setPoints([{ x: 0, y: 0 }]);
+      setPoints([]);
       setIsCustomizing(true);
       setShape(0);
     }

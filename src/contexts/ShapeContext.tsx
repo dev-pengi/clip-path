@@ -29,7 +29,7 @@ const ShapeContext = createContext<ShapeContextValue>({
   shape: 1,
   width: 0,
   height: 0,
-  points: [{ x: 0, y: 0 }],
+  points: [],
   cssCode: "clip-path: ;",
   isCustomizing: false,
   setShape: () => {},
@@ -47,7 +47,7 @@ interface ShapeProviderProps {
 const ShapeProvider: FC<ShapeProviderProps> = ({ children }) => {
   const [shape, setShape] = useState<number>(1);
   const [width, setWidth] = useState<number>(300);
-  const [points, setPoints] = useState<Point[]>([{ x: 0, y: 0 }]);
+  const [points, setPoints] = useState<Point[]>([]);
   const [height, setHeight] = useState<number>(300);
   const [cssCode, setCssCode] = useState<string>(" ");
   const [isCustomizing, setIsCustomizing] = useState<boolean>(false);
