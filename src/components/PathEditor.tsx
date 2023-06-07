@@ -35,7 +35,6 @@ const PolygonEditor: FC = () => {
   }, [shape]);
 
   useEffect(() => {
-    if (!cssCode) setCssCode("clip-path: ;");
     setCssCode(
       `polygon(${points
         .map(
@@ -88,7 +87,7 @@ const PolygonEditor: FC = () => {
         <div className="shadowboard opacity-25 absolute bg-city w-full h-full" />
         <div
           className={`clipped-image bg-city w-full h-full overflow-visible`}
-          style={{ clipPath: cssCode }}
+          style={{ clipPath: points.length ? cssCode : "none" }}
           ref={containerRef}
         />
         {points.map((point, index) => (
